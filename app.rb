@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'base64'
 require 'openssl'
-# require 'sinatra'
+require 'sinatra'
 require 'rails'
 require 'active_support/security_utils'
 require 'shopify_api'
@@ -9,7 +9,6 @@ require 'shopify_api'
 # The Shopify app's shared secret, viewable from the Partner dashboard
 # webhook string
 SHARED_SECRET = '86b895992ac3377d945d29a232e84746ab59e58430b5ecca9ac3db34e73148ab'
-# SHARED_SECRET = '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'
 API_KEY = 'af5dbb553f3e90d76eb99f253d285a69'
 PASSWORD = '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'
 SHOP_NAME = 'kain-kain-store'
