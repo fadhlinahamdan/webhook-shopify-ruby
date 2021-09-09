@@ -2,7 +2,6 @@ require 'rubygems'
 require 'base64'
 require 'openssl'
 require 'sinatra'
-require 'rails'
 require 'active_support/security_utils'
 require 'shopify_api'
 
