@@ -4,6 +4,7 @@ require 'openssl'
 require 'sinatra'
 require 'active_support/security_utils'
 require 'shopify_api'
+require 'rails'
 
 # The Shopify app's shared secret, viewable from the Partner dashboard
 # webhook string
