@@ -49,4 +49,8 @@ post '/webhook/product_update' do
 
   # Always let Shopify know that we have received the webhook
   return [200, 'Webhook successfully received']
-end 
+end
+
+get '/' do
+  "Welcome to Shopify Webhook App! 🎉"
+end

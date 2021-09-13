@@ -92,13 +92,11 @@ GEM
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     nio4r (2.5.8)
-    nio4r (2.5.8-java)
-    nokogiri (1.12.4-java)
-      racc (~> 1.4)
     nokogiri (1.12.4-x64-mingw32)
       racc (~> 1.4)
+    puma (5.4.0)
+      nio4r (~> 2.0)
     racc (1.5.2)
-    racc (1.5.2-java)
     rack (2.2.3)
     rack-protection (2.1.0)
       rack
@@ -154,8 +152,6 @@ GEM
       concurrent-ruby (~> 1.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
-    websocket-driver (0.7.5-java)
-      websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     zeitwerk (2.4.2)
 
@@ -165,6 +161,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  puma
   rails
   shopify_api
   sinatra
