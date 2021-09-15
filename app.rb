@@ -44,7 +44,8 @@ post '/webhook/product_update' do
 
   # Find product and add 'Updated' tag
   product = ShopifyAPI::Product.find(json_data['id'].to_i)
-  puts "Product: #{product}"
+  product_title = json_data['title']
+  puts "Product: #{product_title}"
   product.tags += ', Updated'
   product.save
 
@@ -67,20 +68,10 @@ post '/webhook/order_payment' do
   json_data = JSON.parse data
 
   # Find order and check financial status
-  order = ShopifyAPI::Order.find(json_data['id'].to_i)
-  puts "Order: #{order}"
-  # financial_status = ShopifyAPI::Order.find(json_data['financial_status'].to_i)
-  # puts "Financial status: #{financial_status}"
-
-  # if financial_status == 'paid'
-  #   order.tags += ', Paid'
-  #   order.save
-  #   return "Order is marked as paid"
-  # else
-  #   order.tags += ', Pending'
-  #   order.save
-  #   return "Order payment is pending"
-  # end
+  order_number = json_data['order_number']
+  financial_status = json_data['financial_status']
+  puts "Order: #{order_number}"
+  puts "Payment status: #{financial_status}"
 
   # Always let Shopify know that we have received the webhook
   return [200, 'Webhook successfully received']
@@ -90,3 +81,4 @@ end
 get '/' do
   "Welcome to Shopify Webhook App! 🎉"
 end
+
