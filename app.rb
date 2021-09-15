@@ -28,6 +28,7 @@ helpers do
 end
 
 # Respond to HTTP POST requests sent to this web service
+# PRODUCT UPDATE
 post '/webhook/product_update' do
   request.body.rewind
   data = request.body.read
@@ -43,12 +44,47 @@ post '/webhook/product_update' do
 
   # Find product and add 'Updated' tag
   product = ShopifyAPI::Product.find(json_data['id'].to_i)
-
+  puts "Product: #{product}"
   product.tags += ', Updated'
   product.save
 
   # Always let Shopify know that we have received the webhook
   return [200, 'Webhook successfully received']
+end
+
+# ORDER PAYMENT
+post '/webhook/order_payment' do
+  request.body.rewind
+  data = request.body.read
+  verified = verify_webhook(data, env["HTTP_X_SHOPIFY_HMAC_SHA256"])
+  unless verified
+    return [403, 'Authorization failed. Provided hmac was #{hmac_header}']
+  end
+
+  # Output 'true' or 'false'
+  puts "Webhook verified: #{verified}"
+
+  json_data = JSON.parse data
+
+  # Find order and check financial status
+  order = ShopifyAPI::Order.find(json_data['id'].to_i)
+  puts "Order: #{order}"
+  # financial_status = ShopifyAPI::Order.find(json_data['financial_status'].to_i)
+  # puts "Financial status: #{financial_status}"
+
+  # if financial_status == 'paid'
+  #   order.tags += ', Paid'
+  #   order.save
+  #   return "Order is marked as paid"
+  # else
+  #   order.tags += ', Pending'
+  #   order.save
+  #   return "Order payment is pending"
+  # end
+
+  # Always let Shopify know that we have received the webhook
+  return [200, 'Webhook successfully received']
+
 end
 
 get '/' do
