@@ -54,6 +54,8 @@ post '/webhook/product_update' do
 end
 
 # ORDER PAYMENT
+# A webhook will be sent every time an order has been paid
+# Send email / SMS when the order has been marked as paid
 post '/webhook/order_payment' do
   request.body.rewind
   data = request.body.read
@@ -73,11 +75,23 @@ post '/webhook/order_payment' do
   puts "Order: #{order_number}"
   puts "Payment status: #{financial_status}"
 
+  # Check if customer registered using email or phone number for order updates
+  email = json_data['contact_email']
+  phone = json_data['phone']
+  if email
+    puts "Customer email: #{email}"
+    # send email
+  else phone
+    puts "Customer phone number: #{phone}"
+    # send sms
+  end
+
   # Always let Shopify know that we have received the webhook
   return [200, 'Webhook successfully received']
 
 end
 
+# Respond to HTTP GET request
 get '/' do
   "Welcome to Shopify Webhook App! 🎉"
 end
