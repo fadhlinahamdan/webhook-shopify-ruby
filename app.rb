@@ -5,6 +5,8 @@ require 'sinatra'
 require 'active_support/security_utils'
 require 'shopify_api'
 require 'rails'
+require 'sendgrid-ruby'
+include SendGrid
 
 # The Shopify app's shared secret, viewable from the Partner dashboard
 # webhook string
@@ -76,11 +78,24 @@ post '/webhook/order_payment' do
   puts "Payment status: #{financial_status}"
 
   # Check if customer registered using email or phone number for order updates
-  email = json_data['contact_email']
+  contact_email = json_data['contact_email']
   phone = json_data['phone']
-  if email
-    puts "Customer email: #{email}"
-    # send email
+  if contact_email
+    # puts "Customer email: #{email}"
+
+    # Send email using Twilio Sendgrid
+    from = Email.new(email: 'fadhlina@synomus.io')
+    to = Email.new(email: contact_email)
+    subject = 'Kain Kain Store'
+    content = Content.new(type: 'text/plain', value: 'Hi. Your payment for this order has been received. Thank you for shopping with us!')
+    mail = Mail.new(from, subject, to, content)
+
+    sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+    response = sg.client.mail._('send').post(request_body: mail.to_json)
+    puts response.status_code
+    puts response.body
+    puts response.headers
+    
   else phone
     puts "Customer phone number: #{phone}"
     # send sms
