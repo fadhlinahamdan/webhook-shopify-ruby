@@ -7,6 +7,7 @@ require 'shopify_api'
 require 'rails'
 require 'sendgrid-ruby'
 include SendGrid
+require 'twilio-ruby'
 
 # The Shopify app's shared secret, viewable from the Partner dashboard
 # webhook string
@@ -86,8 +87,8 @@ post '/webhook/order_payment' do
     # Send email using Twilio Sendgrid
     from = Email.new(email: 'fadhlina@synomus.io')
     to = Email.new(email: contact_email)
-    subject = 'Kain Kain Store'
-    content = Content.new(type: 'text/plain', value: 'Hi. Your payment for this order has been received. Thank you for shopping with us!')
+    subject = 'Your payment has been received'
+    content = Content.new(type: 'text/html', value: 'Hi! This is from Kain Kain Store. Your payment has been received. Thank you for shopping with us!') # get value from email.liquid
     mail = Mail.new(from, subject, to, content)
 
     sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
@@ -97,8 +98,21 @@ post '/webhook/order_payment' do
     puts response.headers
     
   else phone
-    puts "Customer phone number: #{phone}"
-    # send sms
+    # puts "Customer phone number: #{phone}"
+
+    # Send SMS using Twilio
+    account_sid = 'AC3d1d141e02281cde6f86b7e9371ec70d' 
+    auth_token = 'a77ddec81338da65616b9b0c2c6becad'
+    client = Twilio::REST::Client.new(account_sid, auth_token)
+
+    from = '+12018176607' # Your Twilio number
+    to = phone # Your mobile phone number
+
+    client.messages.create(
+    from: from,
+    to: to,
+    body: "Hi! This is Kain Kain Store. Your payment has been received. Thank you for shopping with us!"
+    )
   end
 
   # Always let Shopify know that we have received the webhook
